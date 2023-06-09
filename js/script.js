@@ -3,8 +3,10 @@ console.log('JS OK')
 // Recupero gli elementi dal DOM 
 const countdownElement = document.getElementById('countdown');
 const resultElement = document.getElementById('resultField');
-const resetButton = document.getElementById('button');
+const playButton = document.getElementById('playButton');
+const refreshButton = document.getElementById('refreshButton');
 const numbersListElement = document.querySelector('.numberList');
+const inputsElement = document.getElementById('inputs')
 
 
 // Do un valore di partenza al timer
@@ -46,24 +48,67 @@ numbersList += `</ul>`
 numbersListElement.innerHTML = numbersList;
 
 
-// Setto un timer che dopo 10 secondi mi fa sparire i numeri e mi crei un ciclo for per i prompt 
+// // Setto un timer che dopo 10 secondi mi fa sparire i numeri e mi crei un ciclo for per i prompt 
+// const countdownTimeout = setTimeout(function(){
+//     timer = 0;
+//     countdownElement.innerText = timer;
+//     clearInterval(countdown);
+//     numbersListElement.classList.add('d-none')
+//     // Stabilisco un punteggio in modo da poterlo richiamare più tardi
+//     let score = 0;
+//     // Creo un array dove salvare i numeri indovinati dall'utente in modo da poterli richiamare dopo
+//     let rightNumbers = [];
+//     for (let i = 0; i < numbers.length; i++){
+//         const userNumber = parseInt(prompt('Seleziona un numero da 1 a 99'));
+//         if (numbers.includes(userNumber)) {
+//             score++
+//             rightNumbers.push(userNumber);
+//         }
+
+//     }
+//     // Stampo in pagina il risultato con il punteggio
+//     score ? resultElement.innerText = `Daje! Hai fatto ${score} punti e hai indovinato questi numeri: ${rightNumbers} ` : resultElement.innerText = 'Neanche un punto, che scarso!'
+// },10000)
+
+
+
 const countdownTimeout = setTimeout(function(){
     timer = 0;
     countdownElement.innerText = timer;
     clearInterval(countdown);
     numbersListElement.classList.add('d-none')
+    inputsElement.classList.remove('d-none')
+    playButton.classList.remove('d-none')
+
+},10000)
+
+playButton.addEventListener('click', () => {
     // Stabilisco un punteggio in modo da poterlo richiamare più tardi
     let score = 0;
     // Creo un array dove salvare i numeri indovinati dall'utente in modo da poterli richiamare dopo
     let rightNumbers = [];
-    for (let i = 0; i < numbers.length; i++){
-        const userNumber = parseInt(prompt('Seleziona un numero da 1 a 99'));
-        if (numbers.includes(userNumber)) {
+
+    for (let i = 0; i < 5; i++){
+        const userInput = parseInt(document.getElementById(`${i}`).value)
+        if (numbers.includes(userInput)) {
             score++
-            rightNumbers.push(userNumber);
+            rightNumbers.push(userInput);
         }
 
     }
-    // Stampo in pagina il risultato con il punteggio
-    score ? resultElement.innerText = `Daje! Hai fatto ${score} punti e hai indovinato questi numeri: ${rightNumbers} ` : resultElement.innerText = 'Neanche un punto, che scarso!'
-},10000)
+
+    // Result text per rendere più leggibile il codice 
+    const winText = `Daje! Hai fatto ${score} punti e hai indovinato questi numeri: ${rightNumbers} `
+    const loseText = 'Neanche un punto, che scarso!'
+
+    // Stampo il risultato in pagina 
+    score ? resultElement.innerText = winText : resultElement.innerText = loseText;
+    inputsElement.classList.add('d-none')
+    playButton.classList.add('d-none')
+    refreshButton.classList.remove('d-none')
+})
+
+// Soluzione un po' tricky, però per far ripartire il gioco refresho la pagina
+refreshButton.addEventListener('click', () => {
+    location.reload()
+})
